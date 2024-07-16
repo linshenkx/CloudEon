@@ -94,7 +94,12 @@ data:
     echo "0 0 * * * $USER_SYNC_DIR/user-sync.sh > $USER_SYNC_DIR/user-sync.log  ">>$USER_SYNC_DIR/user-sync.crontab
     echo "*/1 * * * * $USER_SYNC_DIR/user-sync.sh >> $USER_SYNC_DIR/user-sync.log  2>&1">>$USER_SYNC_DIR/user-sync.crontab
     echo "" >> $USER_SYNC_DIR/user-sync.crontab
-    crond
+    # 尝试启动 crond 守护进程(centos)，如果失败则启动 cron(ubuntu)
+    if command -v crond >/dev/null 2>&1; then
+        crond
+    else
+        cron
+    fi
     crontab $USER_SYNC_DIR/user-sync.crontab
     crontab -l
 </#noparse>
