@@ -1,0 +1,243 @@
+name: DORIS
+label: "Doris"
+description: "实时OLAP分析系统"
+version: 2.1.2
+dependencies: []
+
+supportKerberos: false
+
+dashboard:
+  uid: "doris001"
+
+roles:
+  - name: DORIS_FE_MASTER
+    label: "Doris Fe Master"
+    roleFullName: "doris-fe-master"
+    linkExpression: "http://${localhostname}:${conf['http_port']}/"
+    sortNum: 1
+    type: DEPLOYMENT
+    needOdd: true
+    minNum : 1
+
+  - name: DORIS_FE_FOLLOWER
+    label: "Doris Fe Follower"
+    roleFullName: "doris-fe-follower"
+    linkExpression: "http://${localhostname}:${conf['http_port']}/"
+    sortNum: 1
+    type: DEPLOYMENT
+    needOdd: true
+    minNum : 1
+
+  - name: DORIS_FE_OBSERVER
+    label: "Doris Fe Observer"
+    roleFullName: "doris-fe-observer"
+    linkExpression: "http://${localhostname}:${conf['http_port']}/"
+    sortNum: 1
+    type: DEPLOYMENT
+    needOdd: true
+    minNum : 1
+
+  - name: DORIS_BE
+    label: "Doris Be"
+    roleFullName: "doris-be"
+    linkExpression: "http://${localhostname}:${conf['webserver_port']}/"
+    sortNum: 2
+    type: DEPLOYMENT
+    minNum: 1
+
+customConfigFiles:
+  - fe.conf
+  - be.conf
+
+configurations:
+  - name: serverImage
+    description: "服务镜像"
+    recommendExpression: "registry.cn-guangzhou.aliyuncs.com/bigdata200/doris:2.1.2-noavx2"
+    valueType: InputString
+    configurableInWizard: true
+    tag: "镜像"
+
+  - name: data.path.list
+    description: "持久化挂载路径列表，逗号分隔。当为空时使用默认路径：全局参数global.persistence.basePath/角色名称"
+    recommendExpression: ""
+    valueType: InputString
+    configurableInWizard: true
+    tag: "资源管理"
+
+  - name: sys_log_level
+    recommendExpression: INFO
+    valueType: Select
+    options: ["INFO","DEBUG","WARN","ERROR"]
+    confFile: "be.conf"
+    configurableInWizard: true
+    description: "BE服务日志级别"
+    tag: "常用参数"
+
+  - name: fragment_pool_queue_size
+    recommendExpression: 2048
+    valueType: InputNumber
+    confFile:  "be.conf"
+    description: "单节点上能够处理的查询请求上限"
+    tag: "性能"
+
+  - name: fragment_pool_thread_num_max
+    recommendExpression: 512
+    valueType: InputNumber
+    confFile:  "be.conf"
+    label: "后续查询请求动态创建线程"
+    description: "后续查询请求动态创建线程，最大创建512个线程。"
+    tag: "性能"
+
+  - name: be_port
+    recommendExpression: 9060
+    valueType: InputNumber
+    confFile: "be.conf"
+    configurableInWizard: true
+    label: "BE admin端口"
+    description: "BE admin端口"
+    tag: "端口"
+
+  - name: webserver_port
+    recommendExpression: 18040
+    configurableInWizard: true
+    valueType: InputNumber
+    confFile:  "be.conf"
+    description: "Be web页面访问端口"
+    tag: "端口"
+
+
+  - name: brpc_port
+    recommendExpression: 8060
+    valueType: InputNumber
+    confFile:  "be.conf"
+    configurableInWizard: true
+    description: "BE Rpc端口"
+    tag: "端口"
+
+  - name: heartbeat_service_port
+    recommendExpression: 9050
+    valueType: InputNumber
+    confFile:  "be.conf"
+    configurableInWizard: true
+    description: "BE心跳服务端口"
+    tag: "端口"
+
+  - name: rpc_port
+    recommendExpression: 9020
+    valueType: InputNumber
+    confFile:  "fe.conf"
+    configurableInWizard: true
+    label: "FE节点上Thrift服务器的端口"
+    description: "FE 节点上 Thrift 服务器的端口。"
+    tag: "端口"
+
+
+  - name: query_port
+    recommendExpression: 9030
+    valueType: InputNumber
+    confFile:  "fe.conf"
+    configurableInWizard: true
+    label: "FE节点上MySQL服务器的端口"
+    description: "FE 节点上 MySQL 服务器的端口"
+    tag: "端口"
+
+  - name: http_port
+    recommendExpression: 18030
+    valueType: InputNumber
+    confFile: "fe.conf"
+    configurableInWizard: true
+    label: "FE节点上web页面的端口"
+    description: "FE节点上web页面的端口"
+    tag: "端口"
+
+  - name: edit_log_port
+    recommendExpression: 9010
+    valueType: InputNumber
+    confFile:  "fe.conf"
+    configurableInWizard: true
+    label: "FE节点上bdbje 的通信端口"
+    description: "FE节点上bdbje 的通信端口"
+    tag: "端口"
+
+  - name: cluster_id
+    recommendExpression: 123
+    valueType: InputNumber
+    confFile:  "fe.conf"
+    configurableInWizard: true
+    label: "集群ID"
+    description: "如果节点（FE 或 BE）具有相同的集群 id，则将认为它们属于同一个Doris 集群"
+    tag: "常用参数"
+
+
+  - name: doris.fe.jvm.memory.percentage
+    description: "Doris Fe jvm堆内存占容器内存限额的百分比"
+    recommendExpression: 75
+    min: 10
+    max: 80
+    valueType: InputNumber
+    unit: ".0"
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.fe.container.limit.cpu
+    description: "Doris Fe容器的CPU使用限额"
+    recommendExpression: 1.0
+    valueType: InputNumber
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.fe.container.limit.memory
+    description: "Doris Fe容器的内存使用限额，单位MB"
+    recommendExpression: 2048
+    valueType: InputNumber
+    unit: Mi
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.fe.container.request.cpu
+    description: "Doris Fe容器的CPU请求量"
+    recommendExpression: 0.2
+    valueType: InputNumber
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.fe.container.request.memory
+    description: "Doris Fe容器的内存请求量，单位MB"
+    recommendExpression: 1024
+    valueType: InputNumber
+    unit: Mi
+    configurableInWizard: true
+    tag: "资源管理"
+
+  - name: doris.be.jvm.memory.percentage
+    description: "Doris Be jvm堆内存占容器内存限额的百分比"
+    recommendExpression: 75
+    min: 10
+    max: 80
+    valueType: InputNumber
+    unit: ".0"
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.be.container.limit.cpu
+    description: "Doris Be容器的CPU使用限额"
+    recommendExpression: 1.0
+    valueType: InputNumber
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.be.container.limit.memory
+    description: "Doris Be容器的内存使用限额，单位MB"
+    recommendExpression: 2048
+    valueType: InputNumber
+    unit: Mi
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.be.container.request.cpu
+    description: "Doris Be容器的CPU请求量"
+    recommendExpression: 0.2
+    valueType: InputNumber
+    configurableInWizard: true
+    tag: "资源管理"
+  - name: doris.be.container.request.memory
+    description: "Doris Be容器的内存请求量，单位MB"
+    recommendExpression: 1024
+    valueType: InputNumber
+    unit: Mi
+    configurableInWizard: true
+    tag: "资源管理"
+
