@@ -28,5 +28,6 @@ public class RoleNodeInfo {
     private Integer id;
     private String hostname;
     private String roleName;
+    private String ip;
 
 }

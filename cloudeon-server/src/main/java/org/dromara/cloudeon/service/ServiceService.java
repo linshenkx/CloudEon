@@ -168,7 +168,7 @@ public class ServiceService {
     private Map<String, List<RoleNodeInfo>> getServiceRoles(List<ServiceRoleInstanceEntity> roleInstanceEntities, ClusterNodeRepository clusterNodeRepository) {
         Map<String, List<RoleNodeInfo>> serviceRoles = roleInstanceEntities.stream().map(serviceRoleInstanceEntity -> {
             ClusterNodeEntity nodeEntity = clusterNodeRepository.findById(serviceRoleInstanceEntity.getNodeId()).get();
-            return new RoleNodeInfo(serviceRoleInstanceEntity.getId(), nodeEntity.getHostname(), serviceRoleInstanceEntity.getServiceRoleName());
+            return new RoleNodeInfo(serviceRoleInstanceEntity.getId(), nodeEntity.getHostname(), serviceRoleInstanceEntity.getServiceRoleName(), nodeEntity.getIp());
         }).collect(Collectors.groupingBy(RoleNodeInfo::getRoleName));
         return serviceRoles;
     }
