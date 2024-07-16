@@ -18,8 +18,13 @@ data:
       reload.period: 10s
     filebeat.registry.path: /workspace/filebeat/registry
     http.enabled: false
+<#if dependencies.ELASTICSEARCH??>
     output.elasticsearch:
       hosts: [${dependencies.ELASTICSEARCH.serviceRoles['ELASTICSEARCH_NODE']?map(role -> '"' + role.hostname+":"+dependencies.ELASTICSEARCH.conf["elasticsearch.http.listeners.port"]+'"')?join(',')}]
+<#else >
+    output.console:
+      pretty: true
+</#if>
 <#noparse >
     processors:
       - script:

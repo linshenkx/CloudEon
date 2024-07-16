@@ -51,3 +51,12 @@ spec:
         alertmanagerConfigSelector:
           matchLabels:
             alertmanagerConfig: "true"
+    prometheusOperator:
+      admissionWebhooks:
+        patch:
+          enabled: true
+          image:
+            registry: ${conf['image.registry.proxy.k8s']}
+    kube-state-metrics:
+      image:
+        registry: ${conf['image.registry.proxy.k8s']}

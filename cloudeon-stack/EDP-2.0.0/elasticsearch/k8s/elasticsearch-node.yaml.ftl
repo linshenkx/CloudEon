@@ -57,6 +57,53 @@ spec:
       hostPID: false
       hostNetwork: true
       containers:
+<#if dependencies.FILEBEAT??>
+      - name: filebeat
+        image: "${dependencies.FILEBEAT.conf['serverImage']}"
+        imagePullPolicy: "${conf['global.imagePullPolicy']}"
+    # 设置root用户运行，避免写入filebeat.registry失败
+        securityContext:
+          runAsUser: 0
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+    <#--禁用filebeat 检测，避免因filebeat状态异常影响安装-->
+    <#--    readinessProbe:-->
+    <#--      exec:-->
+    <#--        command:-->
+    <#--        - sh-->
+    <#--        - -c-->
+    <#--        - |-->
+    <#--          #!/usr/bin/env bash -e-->
+    <#--          filebeat test output-->
+        resources:
+          limits:
+            cpu: "1"
+            memory: 200Mi
+          requests:
+            cpu: 10m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /usr/share/filebeat/filebeat.yml
+          name: filebeat-config
+          subPath: filebeat.yml
+        - mountPath: "/workspace/filebeat"
+          name: "workspace"
+          subPath: filebeat
+        - mountPath: "/workspace/logs"
+          name: "workspace"
+          subPath: logs
+</#if>
       - name: "exporter"
         image: "${conf['exporterImage']}"
         imagePullPolicy: "${conf['global.imagePullPolicy']}"
@@ -166,3 +213,8 @@ spec:
           path: ${dataPath}/data
           type: DirectoryOrCreate
 </#list>
+<#if dependencies.FILEBEAT??>
+      - configMap:
+          name: filebeat-common-config
+        name: filebeat-config
+</#if>

@@ -22,7 +22,7 @@ echo "---------------------------------------------开始-----------------------
 tail -f /dev/null
 
 # 使用 thrift jdbc连接(kyuubi直连)
-$KYUUBI_HOME/bin/beeline -u "jdbc:kyuubi://$HOSTNAME:10509/default;user=root"
+$KYUUBI_HOME/bin/beeline -u "jdbc:kyuubi://$HOSTNAME:10009/default;user=root"
 # 使用 thrift jdbc连接(zookeeper 高可用连接)
 $KYUUBI_HOME/bin/beeline -u 'jdbc:hive2://zk节点:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=kyuubi' -n root
 

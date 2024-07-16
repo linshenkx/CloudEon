@@ -4,7 +4,7 @@
     service: HBASE
     role: HBASE_MASTER
   paths:
-    - /workspace/logs/*hbase-master*.log
+    - /workspace/logs/hbase*master*.log
   multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
   multiline.match: after
@@ -17,7 +17,7 @@
     service: HBASE
     role: HBASE_REGIONSERVER
   paths:
-    - /workspace/logs/*hbase-regionserver*.log
+    - /workspace/logs/hbase*regionserver*.log
   multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
   multiline.match: after
