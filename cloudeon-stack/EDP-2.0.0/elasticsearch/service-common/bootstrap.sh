@@ -14,9 +14,12 @@ su -m elasticsearch -c "elasticsearch -d -p /workspace/elasticsearch-pid"
 
 sleep 5
 
-until find /workspace/logs -mmin -1 | egrep -q '.*'; echo "`date`: Waiting for logs..." ; do sleep 2 ; done
-
-find /workspace/logs -type f -name '*.log' ! -name '*gc*' -exec tail -F {} +
+until find /workspace/logs -mmin -1 -type f -name '*.log' ! -name '*gc*' | grep -q .
+do
+  echo "`date`: Waiting for logs..."
+  sleep 2
+done
+find /workspace/logs -mmin -1 -type f -name '*.log' ! -name '*gc*' -exec tail -F {} +
 
 echo "---------------------------------------------开始----------------------------------------------"
 tail -f /dev/null
