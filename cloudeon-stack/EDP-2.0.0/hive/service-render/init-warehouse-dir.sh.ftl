@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 
 HDFS_HOME="${r"${HADOOP_HOME}"}"
 HIVE_WAREHOUSE_DIR="${conf['hive.metastore.warehouse.dir']}"
