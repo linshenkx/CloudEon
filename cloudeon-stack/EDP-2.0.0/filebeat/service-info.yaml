@@ -3,22 +3,14 @@ label: "Filebeat"
 description: "日志采集工具"
 version: 7.16.3
 
-dependencies:
-    - "OPEN_KRUISE"
-    - "ELASTICSEARCH"
+dependencies: []
 
 supportKerberos: false
 
 dashboard:
   uid: ""
 
-roles:
-  - name: FILEBEAT
-    label: "Filebeat"
-    roleFullName: "filebeat"
-    sortNum: 1
-    type: SIDECAR_SET
-    fixedNum: 1
+roles: []
 
 customConfigFiles: []
 
