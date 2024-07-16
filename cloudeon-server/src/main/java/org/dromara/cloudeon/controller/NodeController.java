@@ -135,6 +135,9 @@ public class NodeController {
     }
 
     private NodeInfoVO getNodeInfoVO(Node e) {
+        if (e == null) {
+            return new NodeInfoVO();
+        }
         int cpu = e.getStatus().getCapacity().get("cpu").getNumericalAmount().intValue();
         long memory = e.getStatus().getCapacity().get("memory").getNumericalAmount().longValue();
         long storage = e.getStatus().getCapacity().get("ephemeral-storage").getNumericalAmount().longValue();
