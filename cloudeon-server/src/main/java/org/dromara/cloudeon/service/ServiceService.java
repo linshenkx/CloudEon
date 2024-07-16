@@ -3,7 +3,6 @@ package org.dromara.cloudeon.service;
 
 import cn.hutool.core.map.MapUtil;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.cloudeon.config.CloudeonConfigProp;
@@ -19,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -174,15 +175,18 @@ public class ServiceService {
     }
 
     /**
-     * 获取依赖服务，包含多层级依赖
+     * 获取同集群下其他所有已安装的服务：
+     * getDependenceServiceInstanceIds代表的是强制依赖，
+     * 部分组件之间的依赖是可选的，无法通过getDependenceServiceInstanceIds获取
+     * 所以这里使用全部获取
      */
     private Map<String, Object> getDependenceService(Integer baseServiceInstanceId) {
-        // 获取多层级依赖id
-        Set<Integer> depServiceInstanceIdsList = getDepServiceInstanceIds(baseServiceInstanceId);
+        ServiceInstanceEntity baseServiceInstanceEntity = serviceInstanceRepository.findById(baseServiceInstanceId).get();
+        List<ServiceInstanceEntity> serviceInstanceEntityList = serviceInstanceRepository.findByClusterId(baseServiceInstanceEntity.getClusterId());
         Map<String, Object> services = new HashMap<>();
-        depServiceInstanceIdsList.forEach(serviceInstanceId -> {
-            ServiceInstanceEntity serviceInstanceEntity = serviceInstanceRepository.findById(serviceInstanceId).get();
+        serviceInstanceEntityList.forEach(serviceInstanceEntity -> {
             Integer stackServiceId = serviceInstanceEntity.getStackServiceId();
+            Integer serviceInstanceId = serviceInstanceEntity.getId();
             String stackServiceName = stackServiceRepository.findById(stackServiceId).get().getName();
 
             // 查询服务实例所有配置项
@@ -197,21 +201,6 @@ public class ServiceService {
         });
         return services;
 
-    }
-
-    private Set<Integer> getDepServiceInstanceIds(Integer serviceInstanceId) {
-        ServiceInstanceEntity serviceInstanceEntity = serviceInstanceRepository.findById(serviceInstanceId).get();
-        if (StringUtils.isBlank(serviceInstanceEntity.getDependenceServiceInstanceIds())) {
-            return Sets.newHashSet();
-        }
-        return Arrays.stream(serviceInstanceEntity.getDependenceServiceInstanceIds().split(","))
-                .map(Integer::valueOf)
-                .flatMap(id -> {
-                    Set<Integer> depServiceInstanceIds = getDepServiceInstanceIds(id);
-                    depServiceInstanceIds.add(id);
-                    return depServiceInstanceIds.stream();
-                })
-                .collect(Collectors.toSet());
     }
 
 
