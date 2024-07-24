@@ -72,6 +72,14 @@ CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实�
     - [datasophon](https://github.com/datasophon/datasophon) ：参考其优秀的监控告警体系
 
 
+## 社区交流
+### 微信公众号
+![图片.png](cloudeon-docs/docs/images/gzh.jpg)
+
+### 微信群
+![图片.png](cloudeon-docs/docs/images/wx.png)
+（添加请备注CloudEon）
+
 
 ## 🤝 贡献者
 
