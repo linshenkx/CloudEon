@@ -1,13 +1,14 @@
 FROM registry.cn-guangzhou.aliyuncs.com/bigdata200/hadoop:3.3.4
 
 ENV FLINK_HOME=/opt/flink
+ENV FLINK_VERSION=1.15.4
 ENV PATH=$PATH:$FLINK_HOME/bin
 
-WORKDIR /home/flink/
+WORKDIR /tmp
 
-RUN wget https://archive.apache.org/dist/flink/flink-1.15.4/flink-1.15.4-bin-scala_2.12.tgz && tar -zxvf flink-1.15.4-bin-scala_2.12.tgz -C /opt \
+RUN wget https://mirrors.huaweicloud.com/apache/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_2.12.tgz \
+    && tar -zxvf flink-*.tgz -C /opt \
     && rm -f flink-*.tgz && mv /opt/flink-*  ${FLINK_HOME}
-
 
 WORKDIR $FLINK_HOME
 
