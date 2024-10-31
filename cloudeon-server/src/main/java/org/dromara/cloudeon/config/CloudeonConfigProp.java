@@ -33,8 +33,6 @@ import java.util.List;
 public class CloudeonConfigProp {
     @Value("${cloudeon.stack.load.path}")
     private String stackLoadPath;
-    @Value("${cloudeon.remote.script.path}")
-    private String remoteScriptPath;
     @Value("${cloudeon.task.log}")
     private String taskLog;
     @Value("${cloudeon.work.home}")
