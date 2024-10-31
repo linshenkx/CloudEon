@@ -1,10 +1,13 @@
 FROM registry.cn-guangzhou.aliyuncs.com/bigdata200/hadoop:3.3.4
 
 ENV HIVE_HOME=/opt/hive
+ENV HIVE_VERSION=3.1.3
 ENV PATH=$PATH:$HIVE_HOME/bin
 
+WORKDIR /tmp
 
-RUN wget --no-check-certificate https://archive.apache.org/dist/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz && tar -zxvf apache-hive-3.1.3-bin.tar.gz -C /opt/ \
+RUN wget https://mirrors.huaweicloud.com/apache/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz \
+    && tar -zxvf apache-hive-*.tar.gz -C /opt \
     && rm -f apache-hive-*-bin.tar.gz && mv /opt/apache-hive-*  $HIVE_HOME
 
 
