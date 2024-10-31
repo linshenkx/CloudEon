@@ -28,10 +28,10 @@ CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实�
 项目相关介绍，使用，最佳实践等相关内容，都会在官方文档呈现，如有疑问，请先阅读官方文档，以下列举以下常用快链。
 
 
-- [项目介绍](https://docs.cloudeon.top/en/latest/)
-- [安装部署](https://docs.cloudeon.top/en/latest/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/docker)
-- [支持组件](https://docs.cloudeon.top/en/latest/%E6%94%AF%E6%8C%81%E7%BB%84%E4%BB%B6/supportservice/)
-- [Roadmap](https://docs.cloudeon.top/en/latest/Roadmap/)
+- [项目介绍](https://docs.cloudeon.top/en/dev2.0/)
+- [安装部署](https://docs.cloudeon.top/en/dev2.0/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/docker)
+- [支持组件](https://docs.cloudeon.top/en/dev2.0/%E6%94%AF%E6%8C%81%E7%BB%84%E4%BB%B6/supportservice/)
+- [Roadmap](https://docs.cloudeon.top/en/dev2.0/Roadmap/)
 
 
 
@@ -71,6 +71,14 @@ CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实�
     - [Ambari](https://github.com/apache/ambari)  ：参考其对大数据组件的安全管理、可拓展大数据组件包管理
     - [datasophon](https://github.com/datasophon/datasophon) ：参考其优秀的监控告警体系
 
+
+## 社区交流
+### 微信公众号
+![图片.png](cloudeon-docs/docs/images/gzh.jpg)
+
+### 微信群
+![图片.png](cloudeon-docs/docs/images/wx.png)
+（添加请备注CloudEon）
 
 
 ## 🤝 贡献者
