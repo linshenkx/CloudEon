@@ -1,11 +1,46 @@
 # Docker部署
-如果你本地已经安装了 docker，执行以下命令可以一键安装：
 
+### 1.简单运行(仅适用于测试)
+
+使用默认配置运行 Cloudeon 容器：
 ```shell
-docker run -d --name cloudeon -p 7700:7700 --rm registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
+image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
+
+docker run -d --name cloudeon -p 7800:7700 $image
+
 ```
 
-tag对应版本号，需根据实际情况修改
+### 2.自定义配置文件运行：
+
+使用自定义配置文件运行 Cloudeon 容器：
+
+可在conf文件夹下通过application.yaml修改数据库连接配置
+
+stack文件夹下包括cloudeon支持的组件的配置文件,修改组件配置文件后重启容器则可更新
+
+```shell
+image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
+conf_path_dir=/opt/cloudeon
+
+# 运行临时容器把配置文件复制到外部，如果已有配置文件则此步骤可以跳过
+docker run --rm \
+--entrypoint /bin/bash \
+-v $conf_path_dir:/data/workspace \
+$image \
+-c "cp -r  /opt/cloudeon/conf /data/workspace/conf && cp -r /opt/cloudeon/stack /data/workspace/stack"
+
+# 根据需求修改配置文件，如在$conf_path_dir/conf下修改数据库连接配置
+# 正式运行
+docker rm -f cloudeon
+docker run -d --name cloudeon \
+-e DB_ACTIVE=mysql \
+-v $conf_path_dir/conf:/opt/cloudeon/conf \
+-v $conf_path_dir/stack:/opt/cloudeon/stack \
+-p 7700:7700 $image
+
+docker logs --tail 100 -f cloudeon
+
+```
 
 镜像启动成功后，在浏览器中访问 http://docker_ip:7700 进入登录页。
 镜像中提供初始账户，用户名 admin 密码 admin
@@ -47,50 +82,5 @@ kubectl -n=命名空间 exec -it ${pod_name} bash
 
 ```
 
-## 配置应用数据库
 
-application.properties文件中包含H2和MySQL作为应用程序数据库的配置，其中默认使用的是H2，意味着程序不用额外准备数据库即可启动。
-MySQL部分则是注释掉的。如果将 Cloudeon 用于生产环境，建议使用 MySQL 作为应用程序数据库，把H2部分注释掉，并修改MySQL部分的连接配置即可。
 
-application.properties文件的获取和使用见下一部分
-
-默认相关配置应如下，请以实际配置为准：
-
-```properties
-# h2
-spring.datasource.driver-class-name=org.h2.Driver
-spring.datasource.url=jdbc:h2:file:${cloudeon.home.path}/cloudeon;MODE=MySQL;DATABASE_TO_LOWER=TRUE
-spring.datasource.username=root
-spring.datasource.password=eWJmP7yvpccHCtmVb61Gxl2XLzIrRgmT
-# mysql
-#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-#spring.datasource.url=jdbc:mysql://localhost:3306/cloudeon?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-#spring.datasource.username=root
-#spring.datasource.password=eWJmP7yvpccHCtmVb61Gxl2XLzIrRgmT
-```
-
-## 配置文件的获取和挂载使用
-
-因不同版本配置文件可能不同，建议直接从镜像中获取application.properties配置文件，参考命令如下：
-
-```shell
-# 镜像名
-image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
-# 存放配置文件的外部路径
-conf_path_dir=/opt/cloudeon
-# 运行临时容器把配置文件复制到外部
-docker run --rm --entrypoint /bin/bash -v $conf_path_dir:/data/conf $image -c "cp  /opt/cloudeon/conf/application.properties /data/conf/"
-
-```
-
-这样就可以在 $conf_path_dir 目录下找到 application.properties 并进行修改，然后再正式挂载使用
-
-```shell
-# 镜像名
-image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
-# 存放配置文件的外部路径
-conf_path_dir=/opt/cloudeon
-# 正式运行
-docker run -d --name cloudeon -v $conf_path_dir/application.properties:/opt/cloudeon/conf/application.properties -p 7700:7700 $image
-
-```

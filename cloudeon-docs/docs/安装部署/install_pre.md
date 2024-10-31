@@ -14,7 +14,7 @@ CloudEon需要一个可访问的Kubernetes集群，目前已知支持的版本�
 ## 数据库环境（非必须）
 
 CloudEon默认使用H2作为内置数据库
-也支持Mysql作为数据库，可以通过修改application.properties文件进行配置，数据库表会自动创建并完成格式化
+也支持Mysql作为数据库，可以通过修改 application.yaml 文件进行配置，数据库表会自动创建并完成格式化
 
 ## k8s命名空间（必须）
 
