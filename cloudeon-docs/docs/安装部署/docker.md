@@ -2,7 +2,7 @@
 如果你本地已经安装了 docker，执行以下命令可以一键安装：
 
 ```shell
-docker run -d --name cloudeon -p 7700:7700 --rm registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta
+docker run -d --name cloudeon -p 7700:7700 --rm registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
 ```
 
 tag对应版本号，需根据实际情况修改
@@ -75,7 +75,7 @@ spring.datasource.password=eWJmP7yvpccHCtmVb61Gxl2XLzIrRgmT
 
 ```shell
 # 镜像名
-image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta
+image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
 # 存放配置文件的外部路径
 conf_path_dir=/opt/cloudeon
 # 运行临时容器把配置文件复制到外部
@@ -87,7 +87,7 @@ docker run --rm --entrypoint /bin/bash -v $conf_path_dir:/data/conf $image -c "c
 
 ```shell
 # 镜像名
-image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta
+image=registry.cn-guangzhou.aliyuncs.com/bigdata200/cloudeon:v2.0.0-beta.1
 # 存放配置文件的外部路径
 conf_path_dir=/opt/cloudeon
 # 正式运行
