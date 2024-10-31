@@ -14,14 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-<#assign servers=[]>
-<#list serviceRoles['SEATUNNEL_SERVER'] as role>
-  <#assign servers += [role.hostname +":"+ conf['seatunnel.server.join.port']   ]>
-</#list>
-
 hazelcast-client:
   cluster-name: ${conf['seatunnel.cluster.name']}
   properties:
     hazelcast.logging.type: log4j2
+  connection-strategy:
+    connection-retry:
+      cluster-connect-timeout-millis: 3000
   network:
-    cluster-members: [${servers?join(",")}]
+    cluster-members:
+    <#list serviceRoles['SEATUNNEL_MASTER'] as master>
+      - ${master.hostname}:${conf['seatunnel.master.join.port']}
+    </#list>

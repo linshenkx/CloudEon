@@ -14,11 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-  <#assign servers=[]>
-  <#list serviceRoles['SEATUNNEL_SERVER'] as role>
-    <#assign servers += [role.hostname  ]>
-  </#list>
-
 hazelcast:
   cluster-name:  ${conf['seatunnel.cluster.name']}
   network:
@@ -32,13 +27,22 @@ hazelcast:
     join:
       tcp-ip:
         enabled: true
-        member-list: [${servers?join(",")}]
+        member-list:
+        <#list serviceRoles['SEATUNNEL_MASTER'] as master>
+          - ${master.hostname}:${conf['seatunnel.master.join.port']}
+        </#list>
     port:
       auto-increment: false
-      port: ${conf['seatunnel.server.join.port']}
+      port: ${conf['seatunnel.worker.join.port']}
   properties:
     hazelcast.invocation.max.retry.count: 20
     hazelcast.tcp.join.port.try.count: 30
     hazelcast.logging.type: log4j2
-    hazelcast.operation.generic.thread.count: 100
+    hazelcast.operation.generic.thread.count: 50
+    hazelcast.heartbeat.failuredetector.type: phi-accrual
+    hazelcast.heartbeat.interval.seconds: 2
+    hazelcast.max.no.heartbeat.seconds: 180
+    hazelcast.heartbeat.phiaccrual.failuredetector.threshold: 10
+    hazelcast.heartbeat.phiaccrual.failuredetector.sample.size: 200
+    hazelcast.heartbeat.phiaccrual.failuredetector.min.std.dev.millis: 100
 
