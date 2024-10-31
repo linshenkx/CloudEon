@@ -24,15 +24,26 @@ spring:
     password: root
     hikari:
       connection-test-query: select 1
-      minimum-idle: 5
-      auto-commit: true
-      validation-timeout: 3000
       pool-name: DolphinScheduler
-      maximum-pool-size: 50
-      connection-timeout: 30000
-      idle-timeout: 600000
-      leak-detection-threshold: 0
-      initialization-fail-timeout: 1
+
+# Mybatis-plus configuration, you don't need to change it
+mybatis-plus:
+  mapper-locations: classpath:org/apache/dolphinscheduler/dao/mapper/*Mapper.xml
+  type-aliases-package: org.apache.dolphinscheduler.dao.entity
+  configuration:
+    cache-enabled: false
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: NULL
+  global-config:
+    db-config:
+      id-type: auto
+    banner: false
+
+demo:
+  tenant-code: default
+  domain-name: localhost
+  api-server-port: 5173
 
 # Override by profile
 

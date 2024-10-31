@@ -15,24 +15,15 @@
 # limitations under the License.
 #
 spring:
-  banner:
-    charset: UTF-8
   application:
     name: master-server
+  profiles:
+    active: postgresql
+  banner:
+    charset: UTF-8
   jackson:
     time-zone: UTC
     date-format: "yyyy-MM-dd HH:mm:ss"
-  cache:
-    # default enable cache, you can disable by `type: none`
-    type: none
-    cache-names:
-      - tenant
-      - user
-      - processDefinition
-      - processTaskRelation
-      - taskDefinition
-    caffeine:
-      spec: maximumSize=100,expireAfterWrite=300s,recordStats
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://127.0.0.1:5432/dolphinscheduler
@@ -40,15 +31,7 @@ spring:
     password: root
     hikari:
       connection-test-query: select 1
-      minimum-idle: 5
-      auto-commit: true
-      validation-timeout: 3000
       pool-name: DolphinScheduler
-      maximum-pool-size: 50
-      connection-timeout: 30000
-      idle-timeout: 600000
-      leak-detection-threshold: 0
-      initialization-fail-timeout: 1
   quartz:
     job-store-type: jdbc
     jdbc:
@@ -56,7 +39,7 @@ spring:
     properties:
       org.quartz.threadPool.threadPriority: 5
       org.quartz.jobStore.isClustered: true
-      org.quartz.jobStore.class: org.quartz.impl.jdbcjobstore.JobStoreTX
+      org.quartz.jobStore.class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
       org.quartz.scheduler.instanceId: AUTO
       org.quartz.jobStore.tablePrefix: QRTZ_
       org.quartz.jobStore.acquireTriggersWithinLock: true
@@ -70,12 +53,28 @@ spring:
       org.quartz.scheduler.makeSchedulerThreadDaemon: true
       org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
       org.quartz.jobStore.clusterCheckinInterval: 5000
+  cloud.discovery.client.composite-indicator.enabled: false
+
+# Mybatis-plus configuration, you don't need to change it
+mybatis-plus:
+  mapper-locations: classpath:org/apache/dolphinscheduler/dao/mapper/*Mapper.xml
+  type-aliases-package: org.apache.dolphinscheduler.dao.entity
+  configuration:
+    cache-enabled: false
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: NULL
+  global-config:
+    db-config:
+      id-type: auto
+    banner: false
+
 
 registry:
   type: zookeeper
   zookeeper:
-    namespace: ${service.serviceName}
-    connect-string: localhost:2181
+    namespace: dolphinscheduler
+    connect-string: ${r"${REGISTRY_ZOOKEEPER_CONNECT_STRING}"}
     retry-policy:
       base-sleep-time: 60ms
       max-sleep: 300ms
@@ -87,8 +86,6 @@ registry:
 
 master:
   listen-port: ${conf['master.server.listen.port']}
-  # master fetch command num
-  fetch-command-num: 10
   # master prepare execute thread number to limit handle commands in parallel
   pre-exec-threads: 10
   # master execute thread number to limit process instances in parallel
@@ -98,22 +95,40 @@ master:
   # master host selector to select a suitable worker, default value: LowerWeight. Optional values include random, round_robin, lower_weight
   host-selector: lower_weight
   # master heartbeat interval
-  heartbeat-interval: 10s
-  # Master heart beat task error threshold, if the continuous error count exceed this count, the master will close.
-  heartbeat-error-threshold: 5
+  max-heartbeat-interval: 10s
   # master commit task retry times
   task-commit-retry-times: 5
   # master commit task interval
   task-commit-interval: 1s
   state-wheel-interval: 5s
-  # master max cpuload avg, only higher than the system cpu load average, master server can schedule. default value -1: the number of cpu cores * 2
-  max-cpu-load-avg: -1
-  # master reserved memory, only lower than system available memory, master server can schedule. default value 0.3, the unit is G
-  reserved-memory: 0.3
+  server-load-protection:
+    # If set true, will open master overload protection
+    enabled: true
+    # Master max system cpu usage, when the master's system cpu usage is smaller then this value, master server can execute workflow.
+    max-system-cpu-usage-percentage-thresholds: 0.7
+    # Master max jvm cpu usage, when the master's jvm cpu usage is smaller then this value, master server can execute workflow.
+    max-jvm-cpu-usage-percentage-thresholds: 0.7
+    # Master max System memory usage , when the master's system memory usage is smaller then this value, master server can execute workflow.
+    max-system-memory-usage-percentage-thresholds: 0.7
+    # Master max disk usage , when the master's disk usage is smaller then this value, master server can execute workflow.
+    max-disk-usage-percentage-thresholds: 0.7
   # failover interval, the unit is minute
   failover-interval: 10m
-  # kill yarn jon when failover taskInstance, default true
-  kill-yarn-job-when-task-failover: true
+  # kill yarn / k8s application when failover taskInstance, default true
+  kill-application-when-task-failover: true
+  registry-disconnect-strategy:
+    # The disconnect strategy: stop, waiting
+    strategy: waiting
+    # The max waiting time to reconnect to registry if you set the strategy to waiting
+    max-waiting-time: 100s
+  worker-group-refresh-interval: 10s
+  command-fetch-strategy:
+    type: ID_SLOT_BASED
+    config:
+      # The incremental id step
+      id-step: 1
+      # master fetch command num
+      fetch-size: 10
 
 server:
   port: ${conf['master.server.port']}
