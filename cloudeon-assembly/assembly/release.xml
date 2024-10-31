@@ -45,7 +45,7 @@
         </fileSet>
         <fileSet>
             <directory>../cloudeon-stack</directory>
-            <outputDirectory>/cloudeon-stack</outputDirectory>
+            <outputDirectory>/stack</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../cloudeon-server/target</directory>
