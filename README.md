@@ -29,6 +29,7 @@ Dromara CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件
 
 
 - [项目文档](cloudeon.dromara.org)
+- [旧版1.x文档](https://docs.cloudeon.top/en/v1.3.0/)
 
 
 
