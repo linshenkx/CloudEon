@@ -1,5 +1,5 @@
 <div align="center">
-<h1>CloudEon云原生大数据平台</h1>
+<h1>Dromara CloudEon云原生大数据平台</h1>
 
 [![GitHub Pull Requests](https://img.shields.io/github/stars/dromara/CloudEon)](https://github.com/dromara/CloudEon/stargazers)
 [![Gitee Star](https://gitee.com/dromara/cloudeon/badge/star.svg?theme=gvp)](https://gitee.com/dromara/CloudEon/stargazers)
@@ -21,17 +21,15 @@
 
 ## ℹ️ 项目简介
 
-CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实现开源大数据平台的容器化运行，您可减少对于底层资源的运维关注。
+Dromara CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实现开源大数据平台的容器化运行，您可减少对于底层资源的运维关注。
 
 ## 🔗 文档快链
 
 项目相关介绍，使用，最佳实践等相关内容，都会在官方文档呈现，如有疑问，请先阅读官方文档，以下列举以下常用快链。
 
 
-- [项目介绍](https://docs.cloudeon.top/en/dev2.0/)
-- [安装部署](https://docs.cloudeon.top/en/dev2.0/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/docker)
-- [支持组件](https://docs.cloudeon.top/en/dev2.0/%E6%94%AF%E6%8C%81%E7%BB%84%E4%BB%B6/supportservice/)
-- [Roadmap](https://docs.cloudeon.top/en/dev2.0/Roadmap/)
+- [项目文档](https://cloudeon.dromara.org)
+- [旧版1.x文档](https://docs.cloudeon.top/en/v1.3.0/)
 
 
 
@@ -74,11 +72,11 @@ CloudEon 将基于 Kubernetes 的资源安装部署开源大数据组件，实�
 
 ## 社区交流
 ### 微信公众号
-![图片.png](cloudeon-docs/docs/images/gzh.jpg)
+[![图片.png](https://cloudeon.dromara.org/images/gzh.jpg)](https://cloudeon.dromara.org/images/gzh.jpg)
 
 ### 微信群
-![图片.png](cloudeon-docs/docs/images/wx.png)
-（添加请备注CloudEon）
+
+[![图片.png](https://cloudeon.dromara.org/images/wx.png)](https://cloudeon.dromara.org/images/wx.png)（添加请备注CloudEon）
 
 
 ## 🤝 贡献者
